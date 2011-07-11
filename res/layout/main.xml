@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+     <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:padding="5dip"  >
+
+      <ListView
+        android:id="@+id/list1"
+        android:layout_width="200dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+      </ListView>
+      <ListView
+          android:id="@+id/list2"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:layout_weight="1">
+        </ListView>
+   </LinearLayout>
+   <EditText
+   android:id="@+id/input_text"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+   </EditText>
+
+   <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:padding="5dip"
+      android:background="@drawable/bottom">
+
+         <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:padding="1dip"
+          android:background="#ffffff"
+          android:onClick="onDigitClick">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="1 2 3 4 5\n6 7 8 9 0"
+              android:textColor="#ffffff"
+              android:background="#000000"
+              android:gravity="center">
+          </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:padding="1dip"
+          android:background="#ffffff"
+          android:onClick="onDigitClick">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="1 2 3 4 5\n6 7 8 9 0"
+              android:textColor="#ffffff"
+              android:background="#000000"
+              android:gravity="center">
+          </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:padding="1dip"
+          android:background="#ffffff"
+          android:onClick="onDigitClick">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="1 2 3 4 5\n6 7 8 9 0"
+              android:textColor="#ffffff"
+              android:background="#000000"
+              android:gravity="center">
+          </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:padding="1dip"
+          android:background="#ffffff"
+          android:onClick="onDigitClick">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="1 2 3 4 5\n6 7 8 9 0"
+              android:textColor="#ffffff"
+              android:background="#000000"
+              android:gravity="center">
+          </TextView>
+        </LinearLayout>
+
+
+
+   </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/num_pad"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:padding="5dip"
+      android:background="#242424"
+      android:visibility="gone" >
+
+      <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button
+            android:text="1"
+            android:id="@+id/Button01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="01"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="2"
+            android:id="@+id/Button02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="02"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="3"
+            android:id="@+id/Button03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="03"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="4"
+            android:id="@+id/Button03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="04"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="5"
+            android:id="@+id/Button03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="05"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="Clear"
+            android:id="@+id/btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button
+            android:text="6"
+            android:id="@+id/Button06"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="06"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="7"
+            android:id="@+id/Button07"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="07"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="8"
+            android:id="@+id/Button08"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="08"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="9"
+            android:id="@+id/Button09"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="09"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="0"
+            android:id="@+id/Button00"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="0"
+            android:onClick="onNumClick">
+        </Button>
+        <Button
+            android:text="Enter"
+            android:id="@+id/btn_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+</LinearLayout>
