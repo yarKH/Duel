@@ -39,10 +39,19 @@ public class NumDuel extends Activity  {
         lv1.setAdapter(mAdapter);
         lv2.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item_main, COUNTRIES));
 
-        //mSolver = new NumSolver();
-
         edit = (EditText) findViewById(R.id.input_text);
 
+
+        mSolver = new NumSolver(NumSolver.newRandom());
+        for (int i = 0; i < 10; i++ ) {
+            int k = 0;
+            while (!mSolver.nextMove().isVictory()) {
+                k++;
+            }
+            Log.e("LOG", "Victory! " + k);
+            mSolver.printCompMoves();
+            mSolver.reset();
+        }
     }
 
     public void onNumClick(View view) {

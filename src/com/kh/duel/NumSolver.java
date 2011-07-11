@@ -1,11 +1,9 @@
 package com.kh.duel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Random;
+import java.util.Set;
 
 import android.util.Log;
 
@@ -13,7 +11,7 @@ public class NumSolver {
 
     private static final String TAG = "Duel:NumSolver";
 
-    private int NUM_LENGTH = 4;
+    private static int NUM_LENGTH = 4;
 
     private String mCompNum;
     private String mUserNum;
@@ -26,9 +24,17 @@ public class NumSolver {
         mCompNum   = newRandom();
         mUserNum   = userNum;
         mCompMoves = new ArrayList<AttemptNum>();
-        initVarMap();
+        initVarMoves();
+        printVarMoves();
 
         Log.i(TAG, "NumSolver created, comp = " + mCompNum + ", user = " + mUserNum);
+    }
+
+    public void reset() {
+        mUserNum = newRandom();
+        mCompMoves.clear();
+        mVarMoves.clear();
+        initVarMoves();
     }
 
     public String getCompNum() {
@@ -39,7 +45,8 @@ public class NumSolver {
         return mUserNum;
     }
 
-    private String newRandom() {
+    public static String newRandom() {
+
         String output = "";
         Random rnd = new Random();
         while(output.length() < NUM_LENGTH) {
@@ -48,6 +55,7 @@ public class NumSolver {
                 output = output.concat(num);
             }
         }
+        Log.i(TAG, "newRandom " + output);
         return output;
     }
 
@@ -64,7 +72,7 @@ public class NumSolver {
                 }
             }
         }
-
+        Log.i(TAG, "check " + num + "hints " + hints + " hits " + hits);
         AttemptNum aNum = new AttemptNum(num, hints, hits);
         if (hits == NUM_LENGTH) {
             aNum.setVictory(true);
@@ -77,114 +85,172 @@ public class NumSolver {
         Random rnd = new Random();
         int pos = rnd.nextInt(mVarMoves.size());
 
-        return mVarMoves.get(pos);
+        String output = mVarMoves.get(pos);
+        Log.i(TAG, "getVarRandom " + output);
+
+        return output;
     }
-
-
-    public AttemptNum nextMove_test() {
-        String sNum = newRandom();
-        AttemptNum aNum = check(sNum, mCompNum);
-        mCompMoves.add(aNum);
-        return aNum;
-    }
-
-
 
     public AttemptNum nextMove() {
+        Log.i(TAG, "nextMove =============");
 
         String sNum = getVarRandom();
-        AttemptNum aNum = check(sNum, mCompNum);
+        AttemptNum aNum = check(sNum, mUserNum);
         mCompMoves.add(aNum);
-        filterVarMap(aNum);
+        if (!aNum.isVictory()) {
+            filterVarMoves(aNum);
+            printVarMoves();
+            //filterDigits(aNum);
+        }
 
         return aNum;
 
     }
 
-    private void filterVarMap(AttemptNum aNum) {
+    private void filterDigits(AttemptNum aNum) {
         int hints =   aNum.getHints();
         int hits =    aNum.getHits();
         String move = aNum.getNumber();
 
-        if (aNum.isVictory()) {
-            return;
+        switch (hints) {
+        case 0:
+
+            break;
         }
 
-        removeDigits(move, hints, hits);
     }
 
-    private void removeDigits(String move, int hints, int hits) {
-        if (hints == 0) {
+    private void filterVarMoves(AttemptNum aNum) {
+        Log.i(TAG, "filterVarMap");
+
+        int hints =   aNum.getHints();
+        int hits =    aNum.getHits();
+        String move = aNum.getNumber();
+
+        mVarMoves.remove(move);
+
+        Set<String> listToRemove = new HashSet<String>();
+
+        switch (hints) {
+        case 0:
             for (String varMove : mVarMoves) {
                 for (int i = 0; i < NUM_LENGTH; i++) {
-                    if (varMove.contains(move.substring(i, i))) {
-                        mVarMoves.remove(varMove);
+                    if (varMove.contains(move.substring(i, i + 1))) {
+                        listToRemove.add(varMove);
                         break;
                     }
                 }
             }
-        } else if (hints == 1) {
+            break;
+
+        case 1:
             for (String varMove : mVarMoves) {
                 for (int i = 0; i < NUM_LENGTH; i++) {
                     for (int j = i + 1; j < NUM_LENGTH; j++) {
-                        if (varMove.contains(move.substring(i, i)) && varMove.contains(move.substring(j, j))) {
-                            mVarMoves.remove(varMove);
+                        if (varMove.contains(move.substring(i, i + 1)) && varMove.contains(move.substring(j, j + 1))) {
+                            listToRemove.add(varMove);
                         }
                     }
-                    if (hits ==0 && (varMove.charAt(i) == move.charAt(i))) {
-                        mVarMoves.remove(varMove);
+                    if (hits == 0 && (varMove.charAt(i) == move.charAt(i))) {
+                        listToRemove.add(varMove);
                     }
                 }
             }
-        } else if (hints == 2) {
+            break;
+
+        case 2:
             for (String varMove : mVarMoves) {
                 for (int i = 0; i < NUM_LENGTH; i++) {
                     for (int j = i + 1; j < NUM_LENGTH; j++) {
                         for (int k = j + 1; k < NUM_LENGTH; k++) {
-                            if (varMove.contains(move.substring(i, i)) && varMove.contains(move.substring(j, j))
-                                    && varMove.contains(move.substring(k, k))) {
-                                mVarMoves.remove(varMove);
+                            if (varMove.contains(move.substring(i, i + 1)) && varMove.contains(move.substring(j, j + 1))
+                                    && varMove.contains(move.substring(k, k + 1))) {
+                                listToRemove.add(varMove);
                             }
                         }
                     }
-                    if (hits ==0 && (varMove.charAt(i) == move.charAt(i))) {
-                        mVarMoves.remove(varMove);
+                    if (hits == 0 && (varMove.charAt(i) == move.charAt(i))) {
+                        listToRemove.add(varMove);
                     }
                 }
             }
-        } else if (hints == 3) {
+            break;
+
+        case 3:
             for (String varMove : mVarMoves) {
-                if (varMove.contains(move.substring(0, 0)) && varMove.contains(move.substring(1, 1))
-                        && varMove.contains(move.substring(2, 2)) && varMove.contains(move.substring(3, 3))) {
-                    mVarMoves.remove(varMove);
+                if (varMove.contains(move.substring(0, 1)) && varMove.contains(move.substring(1, 2))
+                        && varMove.contains(move.substring(2, 3)) && varMove.contains(move.substring(3, 4))) {
+                    listToRemove.add(varMove);
                 }
-                for (int i = 0; hits ==0 && i < NUM_LENGTH; i++) {
+                for (int i = 0; hits == 0 && i < NUM_LENGTH; i++) {
                     if (varMove.charAt(i) == move.charAt(i)) {
-                        mVarMoves.remove(varMove);
+                        listToRemove.add(varMove);
+                    }
+                }
+            }
+            break;
+        case 4:
+            if (hits == 0) {
+                for (String varMove : mVarMoves) {
+                    for (int i = 0; i < NUM_LENGTH; i++) {
+                        if (varMove.charAt(i) == move.charAt(i)) {
+                            listToRemove.add(varMove);
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        Log.i(TAG, "listToRemove " +  listToRemove.size());
+        mVarMoves.removeAll(listToRemove);
+    }
+
+    private void initVarMoves() {
+        Log.i(TAG, "initVarMoves");
+
+        mVarMoves = new  ArrayList<String>();
+
+        for (int pos1 = 0; pos1 < 10; pos1++) {
+            for (int pos2 = 0; pos2 < 10; pos2++) {
+                if (pos1 == pos2) {
+                    continue;
+                }
+                for (int pos3 = 0; pos3 < 10; pos3++) {
+                    if (pos1 == pos3 || pos2 == pos3) {
+                        continue;
+                    }
+                    for (int pos4 = 0; pos4 < 10; pos4++) {
+                        if (pos1 == pos4 || pos2 == pos4 || pos3 == pos4) {
+                            continue;
+                        }
+                        mVarMoves.add("" + pos1 + pos2 + pos3 + pos4);
                     }
                 }
             }
         }
     }
 
-    private void initVarMap() {
-        String varNum;
-        for (int pos1 = 0; pos1 < NUM_LENGTH; pos1++) {
-            varNum = "" + pos1;
-            for (int pos2 = 0; pos2 < NUM_LENGTH; pos2++) {
-                if (pos1 == pos2) continue;
-                varNum += pos2;
-                for (int pos3 = 0; pos3 < NUM_LENGTH; pos3++) {
-                    if (pos1 == pos3 || pos2 == pos3) continue;
-                    varNum += pos3;
-                    for (int pos4 = 0; pos4 < NUM_LENGTH; pos4++) {
-                        if (pos1 == pos4 || pos2 == pos4 || pos3 == pos4) continue;
-                        varNum += pos4;
-                        mVarMoves.add(varNum);
-                    }
-                }
+    public void printVarMoves() {
+        Log.i(TAG, "printVarMoves size " + mVarMoves.size());
+        /*if (mVarMoves.size() < 20 && mVarMoves.size() !=0) {
+            for (String num : mVarMoves) {
+                Log.e(TAG, "num " + num );
             }
+        }*/
+    }
+
+    public static void printAttemptNum(AttemptNum aNum) {
+        Log.i(TAG, "printAttemptNum num " + aNum.getNumber() + " hints " + aNum.getHints() + " hits " + aNum.getHits());
+    }
+
+    public void printCompMoves() {
+        Log.e(TAG, "=========== ");
+        Log.e(TAG, "NUM " + mUserNum);
+        Log.e(TAG, "--- ");
+        for (AttemptNum aNum : mCompMoves) {
+            Log.e(TAG, aNum.getNumber() + " [" + aNum.getHints() + "," + aNum.getHits() + "] " );
         }
+        Log.e(TAG, "=========== ");
     }
 
 
