@@ -17,13 +17,17 @@ public class NumSolver {
     private String mUserNum;
 
     private ArrayList<AttemptNum>  mCompMoves;
-    private ArrayList<Integer>     mVarDigits;
     private ArrayList<String>      mVarMoves;
+
+    private ArrayList<Integer>     mVarDigits;
+    private int mHintsSum;
 
     public NumSolver(String userNum) {
         mCompNum   = newRandom();
         mUserNum   = userNum;
         mCompMoves = new ArrayList<AttemptNum>();
+        mVarDigits = new ArrayList<Integer>();
+
         initVarMoves();
         printVarMoves();
 
@@ -33,8 +37,10 @@ public class NumSolver {
     public void reset() {
         mUserNum = newRandom();
         mCompMoves.clear();
+        mVarDigits.clear();
         mVarMoves.clear();
         initVarMoves();
+        mHintsSum = 0;
     }
 
     public String getCompNum() {
@@ -100,7 +106,7 @@ public class NumSolver {
         if (!aNum.isVictory()) {
             filterVarMoves(aNum);
             printVarMoves();
-            //filterDigits(aNum);
+            filterDigits(aNum);
         }
 
         return aNum;
@@ -108,33 +114,52 @@ public class NumSolver {
     }
 
     private void filterDigits(AttemptNum aNum) {
-        int hints =   aNum.getHints();
-        int hits =    aNum.getHits();
-        String move = aNum.getNumber();
-
-        switch (hints) {
-        case 0:
-
-            break;
+        if (mVarDigits.size() == 10) {
+            return;
         }
 
+        int hints   = aNum.getHints();
+        String move = aNum.getNumber();
+
+        for (int i = 0; i < NUM_LENGTH; i++) {
+            Integer dig = Integer.decode(move.substring(i, i+1));
+            if (mVarDigits.contains(dig)) {
+                hints--;
+            } else {
+                mVarDigits.add(dig);
+            }
+        }
+        mHintsSum += hints;
+
+        Log.e(TAG, "digits mHintsSum " + mHintsSum + " size " + mVarDigits.size());
+
+        String removeDig = "";
+        if (mHintsSum == NUM_LENGTH && mVarDigits.size() != 10) {
+            for(Integer i = 0; i < 10; i++) {
+                if (!mVarDigits.contains(i)) removeDig += i;
+            }
+            Log.e(TAG, "filter digits");
+            if (removeDig.length() != 0) filterVarMoves(new AttemptNum(removeDig, 0, 0));
+        }
     }
 
     private void filterVarMoves(AttemptNum aNum) {
         Log.i(TAG, "filterVarMap");
 
-        int hints =   aNum.getHints();
-        int hits =    aNum.getHits();
+        int hints   = aNum.getHints();
+        int hits    = aNum.getHits();
         String move = aNum.getNumber();
 
         mVarMoves.remove(move);
+
+        final int length = (move.length() < NUM_LENGTH) ? move.length() : NUM_LENGTH;
 
         Set<String> listToRemove = new HashSet<String>();
 
         switch (hints) {
         case 0:
             for (String varMove : mVarMoves) {
-                for (int i = 0; i < NUM_LENGTH; i++) {
+                for (int i = 0; i < length; i++) {
                     if (varMove.contains(move.substring(i, i + 1))) {
                         listToRemove.add(varMove);
                         break;
@@ -145,8 +170,8 @@ public class NumSolver {
 
         case 1:
             for (String varMove : mVarMoves) {
-                for (int i = 0; i < NUM_LENGTH; i++) {
-                    for (int j = i + 1; j < NUM_LENGTH; j++) {
+                for (int i = 0; i < length; i++) {
+                    for (int j = i + 1; j < length; j++) {
                         if (varMove.contains(move.substring(i, i + 1)) && varMove.contains(move.substring(j, j + 1))) {
                             listToRemove.add(varMove);
                         }
@@ -160,9 +185,9 @@ public class NumSolver {
 
         case 2:
             for (String varMove : mVarMoves) {
-                for (int i = 0; i < NUM_LENGTH; i++) {
-                    for (int j = i + 1; j < NUM_LENGTH; j++) {
-                        for (int k = j + 1; k < NUM_LENGTH; k++) {
+                for (int i = 0; i < length; i++) {
+                    for (int j = i + 1; j < length; j++) {
+                        for (int k = j + 1; k < length; k++) {
                             if (varMove.contains(move.substring(i, i + 1)) && varMove.contains(move.substring(j, j + 1))
                                     && varMove.contains(move.substring(k, k + 1))) {
                                 listToRemove.add(varMove);
@@ -182,7 +207,7 @@ public class NumSolver {
                         && varMove.contains(move.substring(2, 3)) && varMove.contains(move.substring(3, 4))) {
                     listToRemove.add(varMove);
                 }
-                for (int i = 0; hits == 0 && i < NUM_LENGTH; i++) {
+                for (int i = 0; hits == 0 && i < length; i++) {
                     if (varMove.charAt(i) == move.charAt(i)) {
                         listToRemove.add(varMove);
                     }
@@ -190,12 +215,14 @@ public class NumSolver {
             }
             break;
         case 4:
-            if (hits == 0) {
-                for (String varMove : mVarMoves) {
-                    for (int i = 0; i < NUM_LENGTH; i++) {
-                        if (varMove.charAt(i) == move.charAt(i)) {
+            for (String varMove : mVarMoves) {
+                for (int i = 0; i < length; i++) {
+                    if (hits != 0) {
+                        if (!varMove.contains(move.subSequence(i, i+1))) {
                             listToRemove.add(varMove);
                         }
+                    } else if (varMove.charAt(i) == move.charAt(i)) {
+                        listToRemove.add(varMove);
                     }
                 }
             }
